@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>posts/index</title>
+</head>
+<body>
+    <p>user1</p>
+    <p>名字：{{.u1.Name}}</p>
+    <p>年龄：{{.u1.Age}}</p>
+    <p>电话：{{.u1.Tel}}</p>
+
+    <p>map1</p>
+    <p>名字：{{.map1.name}}</p>
+    <p>年龄：{{.map1.age}}</p>
+    <p>电话：{{.map1.gender}}</p>
+
+    {{/*这里是注释*/}}
+    {{/*模板里面也可以定义变量*/}}
+    {{ $v1 := 100 }}
+    {{ $age := .map1.age }}
+
+</body>
+</html>
+
