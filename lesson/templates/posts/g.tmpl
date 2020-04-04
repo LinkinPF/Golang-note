@@ -1,0 +1,19 @@
+<h1>测试嵌套template语法</h1>
+<hr>
+{{/*嵌套了另外一个单独的模板文件*/}}
+{{template "ul.tmpl"}}
+<hr>
+{{/*嵌套了另外一个define定义的模板*/}}
+{{template "ol.tmpl"}}
+
+<div>你好，{{.}}</div>
+</body>
+</html>
+{{/*通过define定义一个模板*/}}
+{{define "ol.tmpl"}}
+    <ol>
+        <li>吃饭</li>
+        <li>睡觉</li>
+        <li>吃饭</li>
+    </ol>
+{{end}}

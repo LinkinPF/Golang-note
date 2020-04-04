@@ -5,8 +5,8 @@ package main
 
 import (
 	"fmt"
-	"net/http"
 	"html/template"
+	"net/http"
 )
 
 type student struct {
@@ -125,15 +125,35 @@ func saymyfunc(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w,name)
 }
 
+//模板嵌套
+func demo(w http.ResponseWriter, r *http.Request) {
+	//定义模板
+	//解析模板
+	//		这里文件的顺序一定是被包含的写在后面，先写妈妈
+	t,err := template.ParseFiles("./templates/posts/g.tmpl","./templates/posts/ul.tmpl")
+	if err != nil {
+		fmt.Println("failed")
+		return
+	}
+	name := "zcy"
+	//渲染模板
+	t.Execute(w,name)
+}
+
+
 func main() {
 	http.HandleFunc("/",sayhello)
 	http.HandleFunc("/struct",saystruct)
 	http.HandleFunc("/map",saymap)
 	http.HandleFunc("/structandmap",saystructandmap)
 
+	//自定义函数
 	http.HandleFunc("/myfunc",saymyfunc)
+	//模板嵌套
+	http.HandleFunc("/tmplDemo",demo)
 
-	
+
+
 
 	err := http.ListenAndServe(":9000",nil)
 	if err != nil {
