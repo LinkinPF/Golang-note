@@ -140,19 +140,65 @@ func demo(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w,name)
 }
 
+//修改模板引擎的标识符
+//原因：{{}}在前端的一些框架vue这些，也会使用，那就可能造成冲突，不知道这个{{}}是哪个定义的。
+//修改默认的标识符{{}}在前端可以修改，在后端也可以修改，这里就先修改后端的部分
+func defaultTmpl(w http.ResponseWriter, r *http.Request) {
+	//定义模板
+	//解析模板
+	t, err := template.New("i.tmpl").
+		Delims("{[", "]}").
+		ParseFiles("./templates/posts/i.tmpl")
+	if err != nil {
+		fmt.Println("Parse error")
+	}
+	//渲染模板
+	name := "zcy"
+	err = t.Execute(w,name)
+	if err != nil {
+		fmt.Println("Execute error")
+	}
+}
+
+//html/template针对的是需要返回HTML内容的场景，
+//在模板渲染过程中会对一些有风险的内容进行转义，以此来防范跨站脚本攻击。
+func xss(w http.ResponseWriter, r *http.Request) {
+	//定义模板
+	//解析模板
+	//		解析模板之前定义一个自定义的函数safe
+	t,err := template.New("xss.tmpl").Funcs(template.FuncMap{
+		"safe" : func(s string) template.HTML {
+			return template.HTML(s)
+		},
+	}).ParseFiles("./templates/posts/xss.tmpl")
+	if err != nil {
+		fmt.Println("Parse failed")
+	}
+	//渲染模板
+	str1 := "<a> haha </a>"
+	str2 := "<a> haha </a>"
+	t.Execute(w,map[string]string {
+		"str1" : str1,
+		"str2" : str2,
+	})
+}
 
 func main() {
-	http.HandleFunc("/",sayhello)
-	http.HandleFunc("/struct",saystruct)
-	http.HandleFunc("/map",saymap)
-	http.HandleFunc("/structandmap",saystructandmap)
+	http.HandleFunc("/", sayhello)
+	http.HandleFunc("/struct", saystruct)
+	http.HandleFunc("/map", saymap)
+	http.HandleFunc("/structandmap", saystructandmap)
 
 	//自定义函数
-	http.HandleFunc("/myfunc",saymyfunc)
+	http.HandleFunc("/myfunc", saymyfunc)
 	//模板嵌套
-	http.HandleFunc("/tmplDemo",demo)
+	http.HandleFunc("/tmplDemo", demo)
 
-
+	//修改模板引擎的标识符
+	http.HandleFunc("/defaultTmpl",defaultTmpl)
+	//html/template针对的是需要返回HTML内容的场景，
+	//在模板渲染过程中会对一些有风险的内容进行转义，以此来防范跨站脚本攻击。
+	http.HandleFunc("/xss",xss)
 
 
 	err := http.ListenAndServe(":9000",nil)
@@ -160,16 +206,6 @@ func main() {
 		fmt.Println("HTTP failed")
 	}
 }
-
-
-
-
-
-
-
-
-
-
 
 
 
