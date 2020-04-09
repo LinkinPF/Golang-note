@@ -50,7 +50,7 @@ func main() {
 	//路由组：
 	//把公用的前缀提取出来，创建一个路由组
 	videoGroup := r.Group("/video")
-	{
+	{	//这里的大括号不是必须的
 		videoGroup.GET("/index", func(c *gin.Context) {
 			c.JSON(http.StatusOK, gin.H{"status":"get"})
 		})
