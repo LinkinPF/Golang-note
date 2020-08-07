@@ -1,0 +1,16 @@
+syntax = "proto3";     //使用proto3版本
+
+package pb;     //包名
+
+// 定义一个打招呼的服务
+service Greeter {
+  rpc SayHello (HelloRequest) returns (HelloReplay) {}
+}
+
+message HelloRequest {
+  string name = 1;
+}
+
+message HelloReplay {
+  string message = 1;
+}
